@@ -52,5 +52,66 @@ angular.module('starter.controllers', [])
   ];
 })
 
+
 .controller('PlaylistCtrl', function($scope, $stateParams) {
-});
+})
+
+.controller('AuthCtrl', function($scope, $location, $stateParams, $ionicHistory, $http, $state, $auth, $rootScope) {
+
+        $scope.loginData = {}
+        $scope.loginError = false;
+        $scope.loginErrorText;
+
+        $scope.login = function() {
+
+            var credentials = {
+                email: $scope.loginData.email,
+                password: $scope.loginData.password
+            }
+
+            console.log(credentials);
+
+            $auth.login(credentials).then(function() {
+                // Return an $http request for the authenticated user
+                $http.get('http://localhost:3000/api/user/'+$scope.loginData.email).success(function(response){
+                    // Stringify the retured data
+                    var user = JSON.stringify(response.user);
+
+                    // Set the stringified user data into local storage
+                    localStorage.setItem('user', user);
+
+                    // Getting current user data from local storage
+                    $rootScope.currentUser = response.user;
+                    // $rootScope.currentUser = localStorage.setItem('user');;
+
+                    $ionicHistory.nextViewOptions({
+                      disableBack: true
+                    });
+
+                    $state.go('app.jokes');
+                })
+                .error(function(){
+                    $scope.loginError = true;
+                    $scope.loginErrorText = error.data.error;
+                    console.log($scope.loginErrorText);
+                })
+            });
+        }
+
+})
+
+.controller('JokesCtrl', function($scope){
+    $scope.jokes = [
+      { joke: 'First Joke', id: 1 },
+      { joke: 'Second Joke', id: 2 },
+      { joke: 'Third Joke', id: 3 },
+      { joke: 'Fourth Joke', id: 4 },
+      { joke: 'Fifth Joke', id: 5 },
+      { joke: 'Sixth Joke', id: 6 }
+    ];
+})
+
+
+
+
+;

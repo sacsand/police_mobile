@@ -18,17 +18,13 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item menu-close ng-click="login()">
-          Login
+        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.auth">
+          <i class="icon ion-log-in"></i>
+          <h2>Login</h2>
         </ion-item>
-        <ion-item menu-close href="#/app/search">
-          Search
-        </ion-item>
-        <ion-item menu-close href="#/app/browse">
-          Browse
-        </ion-item>
-        <ion-item menu-close href="#/app/playlists">
-          Playlists
+        <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.jokes">
+          <i class="icon ion-paper-airplane"></i>
+          <h2>Jokes</h2>
         </ion-item>
       </ion-list>
     </ion-content>
