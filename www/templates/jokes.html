@@ -14,7 +14,8 @@
 	<ion-list can-swipe="listCanSwipe">
 	  	<ion-item ng-repeat="joke in jokes" class="item item-text-wrap">
 
-	    <h2>{{joke.joke}}</h2>
+	    <h2>Note: {{joke.name}}</h2>
+      <h4>Created at : {{joke.published_at}}</h4>
 
 	    <ion-option-button class="button-positive"
 	                       ng-click="updatePopup(joke, 'Update')">

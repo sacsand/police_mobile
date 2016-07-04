@@ -100,17 +100,98 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('JokesCtrl', function($scope){
-    $scope.jokes = [
-      { joke: 'First Joke', id: 1 },
-      { joke: 'Second Joke', id: 2 },
-      { joke: 'Third Joke', id: 3 },
-      { joke: 'Fourth Joke', id: 4 },
-      { joke: 'Fifth Joke', id: 5 },
-      { joke: 'Sixth Joke', id: 6 }
-    ];
-})
+.controller('JokesCtrl', function($scope, $auth, $http, $ionicPopup) {
+    $scope.jokes = [];
+    $scope.error;
+    $scope.joke;
 
+    $scope.listCanSwipe = true;
+
+
+  // Update Popup
+  $scope.updatePopup = function(joke, label) {
+    console.log(joke,label);
+  $scope.data = joke;
+
+  var myPopup = $ionicPopup.show({
+    template: '<input type="text" ng-model="data.name">',
+    title: 'Update Joke',
+    // subTitle: 'Please use normal things',
+    scope: $scope,
+    buttons: [
+      // { text: 'Cancel' },
+      {
+        text: '<b>'+label+'</b>',
+        type: 'button-positive',
+        onTap: function(e) {
+          if (!$scope.data.name) {
+            e.preventDefault();
+          } else {
+            return $scope.data;
+          }
+        }
+      }
+    ]
+  });
+  myPopup.then(function(res) {
+    $scope.updateJoke(res);
+    console.log(res);
+  });
+ };
+
+$scope.init = function() {
+              $scope.lastpage=1;
+              $scope.page=1;
+              $scope.limit=7;
+              $http({
+                  url: 'http://localhost:3000/api/cases',
+                  method: "GET",
+                  params: {page: $scope.lastpage , limit:$scope.limit}
+              }).success(function(jokes, status, headers, config) {
+                  $scope.jokes = jokes.docs;
+                  $scope.currentpage = jokes.page;
+              });
+          };
+          $scope.addJoke = function(joke) {
+
+               console.log("add joke: ",joke);
+
+                 $http.post('http://localhost:3000/api/jokes', {
+                     body: joke,
+                     user_id: $rootScope.currentUser.id
+                 }).success(function(response) {
+                     $scope.jokes.unshift(response.data);
+                     console.log($scope.jokes);
+                     $scope.joke = '';
+                     console.log("Joke Created Successfully");
+                 }).error(function(){
+                   console.log("error");
+                 });
+             };
+          $scope.updateJoke = function(joke){
+     console.log(joke);
+     $http.put('http://localhost:3000/api/cases/' + joke._id, {
+           name: joke.name
+           //user_id: $rootScope.currentUser.id
+       }).success(function(response) {
+           console.log("Joke Updated Successfully");
+       }).error(function(){
+         console.log("error");
+       });
+   }
+
+ $scope.deleteJoke = function(index, jokeId){
+     console.log(index, jokeId);
+
+       $http.delete('http://localhost:8000/api/cases/' + jokeId)
+           .success(function() {
+               $scope.jokes.splice(index, 1);
+           });;
+   }
+
+          $scope.init();
+
+})
 
 
 
