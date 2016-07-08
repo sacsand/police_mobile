@@ -1,36 +1,36 @@
-
-
 <ion-view view-title="Jokes">
   <ion-content>
     <div class="list list-inset">
       <label class="item item-input">
-	    <input type="text" placeholder="Add new joke.." ng-model="joke">
-	  </label>
-	  <button class="button button-block button-positive" ng-click="addJoke(joke)">
-	  	Add Joke
-	  </button>
+        <input type="text" placeholder="Add new joke.." ng-model="joke">
+      </label>
+      <button class="button button-block button-positive" ng-click="addJoke(joke)">
+        Add Joke
+      </button>
     </div>
 
-	<ion-list can-swipe="listCanSwipe">
-	  	<ion-item ng-repeat="joke in jokes" class="item item-text-wrap">
 
-	    <h2>Note: {{joke.name}}</h2>
-      <h4>Created at : {{joke.published_at}}</h4>
+    <ion-list can-swipe="listCanSwipe">
+      <ion-item ng-repeat="joke in jokes track by joke._id" class="item item-text-wrap">
 
-	    <ion-option-button class="button-positive"
-	                       ng-click="updatePopup(joke, 'Update')">
-	      <!-- Edit -->
-	      <i class="icon ion-edit"></i>
-	    </ion-option-button>
+        <h2>Note: {{joke.name}}</h2>
+        <h4>Created at : {{joke.published_at}}</h4>
 
-	    <ion-option-button class="button-assertive"
-	                       ng-click="deleteJoke($index, joke.joke_id)">
-	      <!-- Delete -->
-	      <i class="icon ion-trash-a"></i>
-	    </ion-option-button>
+        <ion-option-button class="button-positive" ng-click="updatePopup(joke, 'Update')">
+          <!-- Edit -->
+          <i class="icon ion-edit"></i>
+        </ion-option-button>
 
-	  	</ion-item>
-	</ion-list>
+        <ion-option-button class="button-assertive" ng-click="deleteJoke($index, joke._id)">
+          <!-- Delete -->
+          <i class="icon ion-trash-a"></i>
+        </ion-option-button>
 
-  </ion-content>
+      </ion-item>
+    </ion-list>
+  <!--  <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh(currentpage+1,totalPages)">  </ion-refresher> -->
+    <ion-infinite-scroll  ng-if="!noMoreItemsAvailable"
+  on-infinite="loadMore(5)" distance="10%"></ion-infinite-scroll>
+
+   </ion-content>
 </ion-view>

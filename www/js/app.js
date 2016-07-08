@@ -89,6 +89,38 @@ angular.module('starter', ['ionic', 'starter.controllers','satellizer'])
       }
     })
 
+    .state('app.cases', {
+      url: '/cases',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/cases/cases.html',
+          controller: 'CasesCtrl'
+        }
+      }
+    })
+
+    .state('app.wanted', {
+      url: '/wanted',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/wanted/wanted.html',
+          controller: 'WantedCtrl'
+        }
+      }
+    })
+
+    .state('app.wantedSingle', {
+      url: '/wanted/:wantedId',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/wanted/single.html',
+          controller: 'WantedCtrlSingle'
+        }
+      }
+    })
+
+
+
 
 
 
