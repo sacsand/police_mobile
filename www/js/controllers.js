@@ -330,12 +330,19 @@ angular.module('starter.controllers', [])
       url: 'http://localhost:3000/api/wanted/'+$scope.id.wantedId,
       method: "GET",
     }).success(function(wanteds, status, headers, config) {
-      $scope.wanteds = wanteds.doc;
-      console.log($scope.wanteds);
+      $scope.wanteds = wanteds;
+      //console.log(wanteds.doc._id);
+      $scope.warent = wanteds.warent;
+      //console.log($scope.wanteds);
+      //console.log("warf"+ $scope.wanteds);
+      $scope.details = [];
+      angular.forEach(wanteds.doc, function(doc, index) {
+      angular.forEach(doc.details, function(details, index){
+      $scope.details.push(details);
+     });
+   });
     });
   };
-
-
 
   $scope.init();
 

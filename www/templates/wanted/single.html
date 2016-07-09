@@ -1,9 +1,22 @@
 <ion-view view-title="WantedSingle">
   <ion-content>
-    <ion-list>
-      <ion-item ng-repeat="wanted in wanteds">
-        {{wanted}}
-      </ion-item>
-    </ion-list>
+     <ion-card>
+        <ion-card-content>
+      <h2 class="card-title" ng-repeat="wanted in wanteds.doc">
+        {{wanted.warent}}
+     </h2>
+     <p>
+        Björk first came to prominence as one of the lead vocalists of the avant pop Icelandic sextet the Sugarcubes, but when...
+      </p>
+   </ion-card-content>
+
+   <ion-item >
+     <ion-icon name='musical-notes' item-left style="color: #d03e84"></ion-icon>
+     Height
+     <ion-badge item-right ng-repeat="detail in details">  {{detail.height}}</ion-badge>
+   </ion-item>
+
+
+  </ion-card>
   </ion-content>
 </ion-view>
