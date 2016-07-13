@@ -1,22 +1,59 @@
-<ion-view view-title="WantedSingle">
-  <ion-content>
-     <ion-card>
-        <ion-card-content>
-      <h2 class="card-title" ng-repeat="wanted in wanteds.doc">
-        {{wanted.warent}}
-     </h2>
-     <p>
-        Björk first came to prominence as one of the lead vocalists of the avant pop Icelandic sextet the Sugarcubes, but when...
-      </p>
-   </ion-card-content>
 
-   <ion-item >
-     <ion-icon name='musical-notes' item-left style="color: #d03e84"></ion-icon>
-     Height
-     <ion-badge item-right ng-repeat="detail in details">  {{detail.height}}</ion-badge>
-   </ion-item>
+<ion-view view-title="Ionic Components+">
+  <ion-content scroll="true">
+
+    <div class="im-wrapper">
+
+      <!-- Icon List -->
+      <h4 class="border-top"></i>Suspect Details</h4>
+
+      <div class="card">
+        <div class="item">
+
+          <h2 ng-repeat="wanted in wanteds.doc" >{{wanted.warent}}</h2>
+        </div>
+
+        <div class="item item-body" ng-repeat="wanted in wanteds.doc" >
+          <img  class="full-image" ng-src="data:image/png;base64,{{wanted.data}}">
+
+        </div>
+      </div>
+
+        <div class="list">
+          <a class="item item-icon-left">
+            <i class="icon ion-person-stalker"></i>Name
+            <span class="badge badge-positive" ng-repeat="detail in details"> {{detail.name}}</span>
+          </a>
+          <a class="item item-icon-left">
+            <i class="icon ion-person-stalker"></i> Sex
+            <span class="badge badge-assertive" ng-repeat="detail in details">
+            {{detail.sex}}
+
+        </span>
+          </a>
+          <a class="item item-icon-left">
+            <i class="icon ion-person-stalker"></i> Height
+            <span class="badge badge-assertive" ng-repeat="detail in details">{{detail.height}}</span>
+          </a>
+          <a class="item item-icon-left">
+            <i class="icon ion-person-stalker"></i> Weight
+            <span class="badge badge-assertive" ng-repeat="detail in details">{{detail.weight}}</span>
+          </a>
+          <a class="item item-icon-left">
+            <i class="icon ion-person-stalker"></i> Eye Color
+            <span class="badge badge-assertive" ng-repeat="detail in details">{{detail.eyeColor}}</span>
+          </a>
+          <a class="item item-icon-left">
+            <i class="icon ion-person-stalker"></i> Hair Color
+            <span class="badge badge-assertive" ng-repeat="detail in details">{{detail.hairColor}}</span>
+          </a>
+          <a class="item item-icon-left">
+            <i class="icon ion-person-stalker"></i> Race
+            <span class="badge badge-assertive" ng-repeat="detail in details">{{detail.race}}</span>
+          </a>
+        </div>
 
 
-  </ion-card>
+      </div>
   </ion-content>
 </ion-view>

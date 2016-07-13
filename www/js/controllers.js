@@ -169,28 +169,31 @@ angular.module('starter.controllers', [])
   $scope.noMoreItemsAvailable = false;
   $scope.loadMore = function(limit) {
     console.log("Load More Called");
-                if(!limit){
-                  limit = 5;
-                }
+    if (!limit) {
+      limit = 5;
+    }
 
-                $scope.lastpage +=1;
-                $http({
-                    url: 'http://localhost:3000/api/cases',
-                    method: "GET",
-                    params: {limit: limit, page:  $scope.lastpage}
-                }).success(function (jokes, status, headers, config) {
-                    console.log(jokes);
+    $scope.lastpage += 1;
+    $http({
+      url: 'http://localhost:3000/api/cases',
+      method: "GET",
+      params: {
+        limit: limit,
+        page: $scope.lastpage
+      }
+    }).success(function(jokes, status, headers, config) {
+      console.log(jokes);
 
-                    if (jokes.page == jokes.pages){
-                         $scope.noMoreItemsAvailable = true;
-                     }
+      if (jokes.page == jokes.pages) {
+        $scope.noMoreItemsAvailable = true;
+      }
 
-                    $scope.jokes = $scope.jokes.concat(jokes.docs);
+      $scope.jokes = $scope.jokes.concat(jokes.docs);
 
 
-                });
-                $scope.$broadcast('scroll.infiniteScrollComplete');
-            };
+    });
+    $scope.$broadcast('scroll.infiniteScrollComplete');
+  };
 
 
   $scope.addJoke = function(joke) {
@@ -198,9 +201,9 @@ angular.module('starter.controllers', [])
     console.log("add joke: ", joke);
 
     $http.post('http://localhost:3000/api/cases', {
-    //  console.log($rootScope.currentUser.name);
+      //  console.log($rootScope.currentUser.name);
       name: joke
-      //_id: $rootScope.currentUser.name
+        //_id: $rootScope.currentUser.name
     }).success(function(response) {
       $scope.jokes.unshift(response);
       console.log($scope.jokes);
@@ -234,16 +237,16 @@ angular.module('starter.controllers', [])
   };
 
 
-    $scope.doRefresh = function(currentP,totalP){
-        console.log(totalP);
-        if(currentP !=totalP+1){
-        $scope.init(currentP);
-        $scope.$broadcast('scroll.refreshComplete');
-      }else{
-        $scope.init(1);
-        $scope.$broadcast('scroll.refreshComplete');
-      }
+  $scope.doRefresh = function(currentP, totalP) {
+    console.log(totalP);
+    if (currentP != totalP + 1) {
+      $scope.init(currentP);
+      $scope.$broadcast('scroll.refreshComplete');
+    } else {
+      $scope.init(1);
+      $scope.$broadcast('scroll.refreshComplete');
     }
+  }
 
   $scope.init(1);
 
@@ -259,8 +262,8 @@ angular.module('starter.controllers', [])
 
   $scope.init = function() {
     $scope.lastpage = 1;
-  //  $scope.page = page;
-    $scope.limit = 5;
+    //  $scope.page = page;
+    $scope.limit = 40;
     $http({
       url: 'http://localhost:3000/api/wanted',
       method: "GET",
@@ -281,28 +284,31 @@ angular.module('starter.controllers', [])
   $scope.noMoreItemsAvailable = false;
   $scope.loadMore = function(limit) {
     console.log("Load More Called");
-                if(!limit){
-                  limit = 5;
-                }
+    if (!limit) {
+      limit = 10;
+    }
 
-                $scope.lastpage +=1;
-                $http({
-                    url: 'http://localhost:3000/api/wanted',
-                    method: "GET",
-                    params: {limit: limit, page:  $scope.lastpage}
-                }).success(function (wanteds, status, headers, config) {
-                    console.log(jokes);
-
-                    if (wanteds.page == wanteds.pages){
-                         $scope.noMoreItemsAvailable = true;
-                     }
-
-                    $scope.wanteds = $scope.wanteds.concat(wanteds.docs);
+    $scope.lastpage += 1;
+    $http({
+      url: 'http://localhost:3000/api/wanted',
+      method: "GET",
+      params: {
+        limit: limit,
+        page: $scope.lastpage
+      }
+    }).success(function(wanteds, status, headers, config) {
 
 
-                });
-                $scope.$broadcast('scroll.infiniteScrollComplete');
-            };
+      if (wanteds.page == wanteds.pages) {
+        $scope.noMoreItemsAvailable = true;
+      }
+
+      $scope.wanteds = $scope.wanteds.concat(wanteds.docs);
+
+
+    });
+    $scope.$broadcast('scroll.infiniteScrollComplete');
+  };
 
 
 
@@ -310,9 +316,9 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('WantedCtrlSingle', function($scope, $auth, $http,$stateParams) {
+.controller('WantedCtrlSingle', function($scope, $auth, $http, $stateParams) {
   $scope.wanteds = [];
-  $scope.id=$stateParams;
+  $scope.id = $stateParams;
 
   $scope.error;
   $scope.wanted;
@@ -323,24 +329,32 @@ angular.module('starter.controllers', [])
 
 
   $scope.init = function() {
-    $scope.lastpage = 1;
-  //  $scope.page = page;
-    $scope.limit = 5;
     $http({
-      url: 'http://localhost:3000/api/wanted/'+$scope.id.wantedId,
+      url: 'http://localhost:3000/api/wanted/' + $scope.id.wantedId,
       method: "GET",
     }).success(function(wanteds, status, headers, config) {
       $scope.wanteds = wanteds;
+      $scope.datas = wanteds.doc.data;
+
+      console.log($scope.datas);
+      //$scope.doc.img=Wanteds.doc.img;
       //console.log(wanteds.doc._id);
-      $scope.warent = wanteds.warent;
       //console.log($scope.wanteds);
       //console.log("warf"+ $scope.wanteds);
+      $scope.imageb = [];
       $scope.details = [];
       angular.forEach(wanteds.doc, function(doc, index) {
-      angular.forEach(doc.details, function(details, index){
-      $scope.details.push(details);
-     });
-   });
+        angular.forEach(doc.details, function(details, index) {
+          $scope.details.push(details);
+        });
+      });
+      /*angular.forEach(wanteds.doc, function(doc, index) {
+        angular.forEach(doc.img, function(img, index) {
+          $scope.imageb.push(img);
+        });
+      });*/
+
+      console.log($scope.imageb);
     });
   };
 
