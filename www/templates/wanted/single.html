@@ -1,5 +1,5 @@
 
-<ion-view view-title="Ionic Components+">
+<ion-view view-title="Wanted">
   <ion-content scroll="true">
 
     <div class="im-wrapper">
@@ -15,6 +15,7 @@
 
         <div class="item item-body" ng-repeat="wanted in wanteds.doc" >
           <img  class="full-image" ng-src="data:image/png;base64,{{wanted.data}}">
+          {{wanted.description}}
 
         </div>
       </div>
@@ -51,6 +52,7 @@
             <i class="icon ion-person-stalker"></i> Race
             <span class="badge badge-assertive" ng-repeat="detail in details">{{detail.race}}</span>
           </a>
+          
         </div>
 
 

@@ -119,6 +119,16 @@ angular.module('starter', ['ionic', 'starter.controllers','satellizer','ionic-ma
       }
     })
 
+    .state('app.messages', {
+      url: '/messages',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/messages/inbox.html',
+          controller: 'MessagesCtrl'
+        }
+      }
+    })
+
 
 
 

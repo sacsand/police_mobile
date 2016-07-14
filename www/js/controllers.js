@@ -85,13 +85,13 @@ angular.module('starter.controllers', [])
       // Return an $http request for the authenticated user
       $http.get('http://localhost:3000/api/user/' + $scope.loginData.email).success(function(response) {
           // Stringify the retured data
-          var user = JSON.stringify(response.user);
+          var user = JSON.stringify(response);
 
           // Set the stringified user data into local storage
           localStorage.setItem('user', user);
 
           // Getting current user data from local storage
-          $rootScope.currentUser = response.user;
+            $rootScope.currentUser = response;
           // $rootScope.currentUser = localStorage.setItem('user');
 
           $ionicHistory.nextViewOptions({
@@ -148,9 +148,9 @@ angular.module('starter.controllers', [])
     });
   };
 
-  $scope.init = function(page) {
+  $scope.init = function() {
     $scope.lastpage = 1;
-    $scope.page = page;
+    $scope.page = 1;
     $scope.limit = 5;
     $http({
       url: 'http://localhost:3000/api/cases',
@@ -243,7 +243,7 @@ angular.module('starter.controllers', [])
       $scope.init(currentP);
       $scope.$broadcast('scroll.refreshComplete');
     } else {
-      $scope.init(1);
+      $scope.init();
       $scope.$broadcast('scroll.refreshComplete');
     }
   }
@@ -361,5 +361,35 @@ angular.module('starter.controllers', [])
   $scope.init();
 
 })
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+.controller('MessagesCtrl', function($scope, $auth, $http,$rootScope) {
+  $scope.messages = [];
+  $scope.error;
+  $scope.message;
+
+  $scope.listCanSwipe = true;
+  //console.log(rootScope.currentUser);
+  $scope.init = function() {
+    $http({
+      url: 'http://localhost:3000/api/messages/received/5778e75dbf132517292b476b',
+      method: "GET",
+    }).success(function(messages, status, headers, config) {
+      //$scope.allmessages = messages;
+      console.log(messages);
+      console.log(messages.messages_received)
+      $scope.messages=messages.messages_received;
+        /*angular.forEach(messages, function(messages_received, index) {
+          $scope.messages.push(messages_received);
+        }); */
+
+
+    });
+  };
+
+  $scope.init();
+
+})
+
 
 ;
