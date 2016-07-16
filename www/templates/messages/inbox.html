@@ -1,13 +1,6 @@
 <ion-view view-title="Messages">
-
   <ion-content>
-
-
-
-
-
-
-        <div class="list card stable-bg" ng-repeat="message in messages">
+        <div class="list card stable-bg" ng-repeat="message in messages | orderBy:'-'">
             <div class="item item-avatar">
                 <img src="img/message.png">
                 <h2>{{message.content | limitTo:20 }}...</h2>
@@ -20,7 +13,6 @@
                     <a class="subdued">5 Comments</a>
                 </p>
             </div>
-
         </div>
   </ion-content>
 </ion-view>

@@ -364,6 +364,10 @@ angular.module('starter.controllers', [])
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 .controller('MessagesCtrl', function($scope, $auth, $http,$rootScope) {
+
+//  var vm = this;
+ // create a new time variable with the current date
+  //vm.time = new Date()
   $scope.messages = [];
   $scope.error;
   $scope.message;
