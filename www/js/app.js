@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','satellizer','ionic-material'])
+angular.module('starter', ['ionic', 'starter.controllers','satellizer','ionic-material','ngCordova'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -22,8 +22,34 @@ angular.module('starter', ['ionic', 'starter.controllers','satellizer','ionic-ma
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider,$authProvider) {
-  $authProvider.loginUrl = 'http://localhost:3000/api/authenticate'; //or whatever your api url is
+.constant('RESOURCES',
+    {
+        API_URL: 'http://localhost:3000/',
+    })
+
+
+
+.factory('Markers', function($http,RESOURCES) {
+
+  var markers = [];
+
+  return {
+    getMarkers: function(){
+
+      return $http.get(RESOURCES.API_URL+'map').then(function(response){
+          markers = response;
+          return markers;
+      });
+
+    },
+    getMarker: function(id){
+
+    }
+  }
+})
+
+.config(function($stateProvider, $urlRouterProvider,$authProvider,RESOURCES) {
+  $authProvider.loginUrl = RESOURCES.API_URL+'api/authenticate'; //or whatever your api url is
     $stateProvider
     .state('app', {
     url: '/app',
@@ -128,6 +154,18 @@ angular.module('starter', ['ionic', 'starter.controllers','satellizer','ionic-ma
         }
       }
     })
+
+
+  .state('app.map', {
+    url: '/map',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/map/map.html',
+        controller: 'MapCtrl'
+      }
+    }
+  })
+
 
 
 
