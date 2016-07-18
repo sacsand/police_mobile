@@ -391,7 +391,7 @@ angular.module('starter.controllers', [])
 })
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
+/*
 .controller('MapCtrl', function($scope, $state, $cordovaGeolocation,RESOURCES) {
   var options = {
     timeout: 10000,
@@ -434,5 +434,11 @@ angular.module('starter.controllers', [])
   });
 
 })
+*/
 
+.controller('MapCtrl', function($scope, $state, $cordovaGeolocation,Markers,GoogleMaps) {
+
+   GoogleMaps.init();
+
+})
 ;
