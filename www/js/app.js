@@ -18,6 +18,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
+      GoogleMaps.init();
     }
 
 
@@ -25,7 +26,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
 })
 
 .constant('RESOURCES', {
-  API_URL: 'http://localhost:3000/',
+//  API_URL: 'http://localhost:3000/',
+    API_URL: 'https://sheltered-castle-98865.herokuapp.com/'
 })
 
 .factory('Markers', function($http,RESOURCES) {
@@ -104,7 +106,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
         var markerPos = new google.maps.LatLng(record.lat, record.lng);
 
         var distanceInKm= google.maps.geometry.spherical.computeDistanceBetween(latLng,markerPos)/1000;
-  
+
           if(distanceInKm<2){
             console.log("distance"+distanceInKm )
           }
