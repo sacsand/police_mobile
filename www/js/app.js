@@ -8,8 +8,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
+    // register push notification and get local push token
+
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
+
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
@@ -18,6 +21,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
+
+
+          var push = new Ionic.Push({
+            "debug": true
+          });
+
+          push.register(function(token) {
+            console.log("My Device token:", token.token);
+            push.saveToken(token); // persist the token in the Ionic Platform
+          });
+
       GoogleMaps.init();
     }
 
@@ -26,20 +40,20 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
 })
 
 .constant('RESOURCES', {
-//  API_URL: 'http://localhost:3000/',
-    API_URL: 'https://sheltered-castle-98865.herokuapp.com/'
+    API_URL: 'http://localhost:3000/',
+//  API_URL: 'https://sheltered-castle-98865.herokuapp.com/'
 })
 
-.factory('Markers', function($http,RESOURCES) {
+.factory('Markers', function($http, RESOURCES) {
 
   var markers = [];
 
   return {
-    getMarkers: function(){
+    getMarkers: function() {
 
-      return $http.get(RESOURCES.API_URL+'api/map').then(function(response){
-          markers = response;
-          return markers;
+      return $http.get(RESOURCES.API_URL + 'api/map').then(function(response) {
+        markers = response;
+        return markers;
       });
 
     }
@@ -72,7 +86,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
       map = new google.maps.Map(document.getElementById("map"), mapOptions);
       //Wait until the map is loaded
       google.maps.event.addListenerOnce(map, 'idle', function() {
-        var user_icon='img/current_location.png';
+        var user_icon = 'img/current_location.png';
         var markerUser = new google.maps.Marker({
           map: map,
           animation: google.maps.Animation.DROP,
@@ -105,14 +119,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
         var record = records[i];
         var markerPos = new google.maps.LatLng(record.lat, record.lng);
 
-        var distanceInKm= google.maps.geometry.spherical.computeDistanceBetween(latLng,markerPos)/1000;
+        var distanceInKm = google.maps.geometry.spherical.computeDistanceBetween(latLng, markerPos) / 1000;
 
-          if(distanceInKm<2){
-            console.log("distance"+distanceInKm )
-          }
-        if(record.incident_type=="accident"){
+        if (distanceInKm < 2) {
+          console.log("distance" + distanceInKm)
+        }
+        if (record.incident_type == "accident") {
 
-          var user_icon='img/red.png';
+          var user_icon = 'img/red.png';
           // Add the markerto the map
           var marker = new google.maps.Marker({
             map: map,
@@ -124,7 +138,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
           var infoWindowContent = "<h4>" + record.title + "</h4>";
 
           addInfoWindow(marker, infoWindowContent, record);
-        }else{
+        } else {
           // Add the markerto the map
           var marker = new google.maps.Marker({
             map: map,
@@ -232,15 +246,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
     }
   })
 
-  .state('app.cases', {
-    url: '/cases',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/cases/cases.html',
-        controller: 'CasesCtrl'
-      }
-    }
-  })
 
   .state('app.wanted', {
     url: '/wanted',
@@ -282,6 +287,27 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
       }
     }
   })
+
+  .state('app.cases', {
+    url: '/cases',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/cases/cases.html',
+        controller: 'CasesCtrl'
+      }
+    }
+  })
+
+  .state('app.casesSingle', {
+    url: '/cases/:caseid',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/cases/single.html',
+        controller: 'casesCtrlSingle'
+      }
+    }
+  })
+
 
 
 

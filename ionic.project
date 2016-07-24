@@ -1,6 +1,6 @@
 {
   "name": "police_mobile",
-  "app_id": "",
+  "app_id": "347dc6e6",
   "gulpStartupTasks": [
     "sass",
     "watch"

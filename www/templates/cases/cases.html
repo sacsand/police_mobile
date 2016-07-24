@@ -1,14 +1,15 @@
+<ion-view view-title="Cases Library">
 
-<ion-view view-title="Jokes">
   <ion-content>
 
-	<ion-list>
-	  <ion-item ng-repeat="joke in jokes" class="item item-text-wrap">
+        <h4 class="border-top"><i class="icon ion-android-happy"></i> Cases Library</h4>
+        <div class="list">
+            <a class="item item-avatar" ng-repeat="case in cases" href="#/app/cases/{{case._id}}" >
+                <img ng-src="data:image/png;base64,{{case.image}}">
+                <h2>{{case.title}}</h2>
+                <p>{{case.case_id}}</p>
+            </a>
 
-	    <h2>{{joke.joke}}</h2>
-
-	  </ion-item>
-	</ion-list>
-
+        </div>
   </ion-content>
 </ion-view>

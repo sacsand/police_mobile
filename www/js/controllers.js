@@ -339,10 +339,6 @@ angular.module('starter.controllers', [])
       $scope.datas = wanteds.doc.data;
 
       console.log($scope.datas);
-      //$scope.doc.img=Wanteds.doc.img;
-      //console.log(wanteds.doc._id);
-      //console.log($scope.wanteds);
-      //console.log("warf"+ $scope.wanteds);
       $scope.imageb = [];
       $scope.details = [];
       angular.forEach(wanteds.doc, function(doc, index) {
@@ -350,11 +346,6 @@ angular.module('starter.controllers', [])
           $scope.details.push(details);
         });
       });
-      /*angular.forEach(wanteds.doc, function(doc, index) {
-        angular.forEach(doc.img, function(img, index) {
-          $scope.imageb.push(img);
-        });
-      });*/
 
       console.log($scope.imageb);
     });
@@ -441,4 +432,91 @@ angular.module('starter.controllers', [])
    GoogleMaps.init();
 
 })
-;
+
+.controller('CasesCtrl', function($scope, $auth, $http,RESOURCES) {
+  $scope.cases = [];
+  $scope.error;
+  $scope.case;
+  console.log($scope.cases);
+  $scope.listCanSwipe = true;
+
+
+  $scope.init = function() {
+    $scope.lastpage = 1;
+    //  $scope.page = page;
+    $scope.limit = 40;
+    $http({
+      url:RESOURCES.API_URL+'api/caseslibry',
+      method: "GET",
+      params: {
+        page: $scope.lastpage,
+        limit: $scope.limit
+      }
+    }).success(function(cases, status, headers, config) {
+      $scope.cases = cases.docs;
+      console.log($scope.cases);
+    });
+  };
+
+  $scope.noMoreItemsAvailable = false;
+  $scope.loadMore = function(limit) {
+    console.log("Load More Called");
+    if (!limit) {
+      limit = 10;
+    }
+
+    $scope.lastpage += 1;
+    $http({
+      url: RESOURCES.API_URL+'api/caseslibry',
+      method: "GET",
+      params: {
+        limit: limit,
+        page: $scope.lastpage
+      }
+    }).success(function(cases, status, headers, config) {
+
+
+      if (cases.page == cases.pages) {
+        $scope.noMoreItemsAvailable = true;
+      }
+
+      $scope.cases = $scope.cases.concat(cases.docs);
+
+
+    });
+    $scope.$broadcast('scroll.infiniteScrollComplete');
+  };
+  $scope.init();
+
+})
+
+.controller('casesCtrlSingle', function($scope, $auth, $http, $stateParams,RESOURCES) {
+  $scope.cases = [];
+  $scope.id = $stateParams;
+  console.log($scope.id.caseid)
+  $scope.error;
+  $scope.cases;
+  console.log($stateParams);
+
+  $scope.listCanSwipe = true;
+
+
+  $scope.init = function() {
+    $http({
+      url: RESOURCES.API_URL+'api/caseslibry/' + $scope.id.caseid,
+      method: "GET",
+    }).success(function(cases, status, headers, config) {
+      $scope.cases = cases.doc;
+      $scope.timeline = [];
+      angular.forEach(cases.doc, function(doc, index) {
+        angular.forEach(doc.timeline, function(timeline, index) {
+          $scope.timeline.push(timeline);
+        });
+      });
+
+    });
+  };
+
+  $scope.init();
+
+})

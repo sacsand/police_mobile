@@ -23,7 +23,14 @@
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard",
     "cordova-plugin-geolocation",
-    "cordova-plugin-compat"
+    "cordova-plugin-compat",
+    {
+      "variables": {
+        "SENDER_ID": "697911098899"
+      },
+      "locator": "phonegap-plugin-push",
+      "id": "phonegap-plugin-push"
+    }
   ],
   "cordovaPlatforms": [
     "android"

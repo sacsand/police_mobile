@@ -1,0 +1,45 @@
+
+<ion-view view-title="">
+  <ion-content scroll="true">
+
+    <div class="im-wrapper" ng-repeat="case in cases" >
+
+      <h3 >{{case.title}}</h3>
+
+
+
+      <h4 class="border-top"><i class="icon ion-arrow-shrink"></i> Case ID : {{case.case_id}}       </h4>
+
+      <div class="list">
+        <a class="item item-avatar" >
+          <img ng-src="img/accident.png">
+          <h2>Type : {{case.type}}       </h2>
+          <p>{{case.published_at}}</p>
+        </a>
+      </div>
+
+
+      <h4 class="no-padding-bottom">Description</h4>
+      <strong>{{case.title}}</strong>
+      <p ng-repeat="case in cases" >{{case.description}}</p>
+
+      <h4 class="border-top"><i class="icon ion-arrow-shrink"></i>   Images</h4>
+
+      <div class="card">
+        <div class="item item-body">
+          <img  class="full-image" ng-src="data:image/png;base64,{{case.image}}">
+              </div>
+      </div>
+
+      <h4 class="no-padding-bottom">Case Updates</h4>
+
+
+      <div class="list" ng-repeat="item in timeline">
+        <strong>{{item.title}} - {{item.updated_at}} </strong>
+        <p ng-repeat="case in cases" >{{item.content}}</p>
+
+      </div>
+
+      </div>
+  </ion-content>
+</ion-view>
