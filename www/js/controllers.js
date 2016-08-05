@@ -41,7 +41,9 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('PlaylistsCtrl', function($scope) {
+.controller('PlaylistsCtrl', function($scope,$rootScope) {
+
+
   $scope.playlists = [{
     title: 'Reggae',
     id: 1
@@ -255,6 +257,11 @@ angular.module('starter.controllers', [])
 })
 
 .controller('WantedCtrl', function($scope, $auth, $http,RESOURCES) {
+  $scope.$on('$ionicView.beforeEnter', function () {
+    $scope.init();       // update campaigns everytime the view becomes active
+         // (on first time added to DOM and after the view becomes active after cached
+       //alert('test');
+   });
   $scope.wanteds = [];
   $scope.error;
   $scope.wanted;
@@ -264,7 +271,6 @@ angular.module('starter.controllers', [])
 
   $scope.init = function() {
     $scope.lastpage = 1;
-    //  $scope.page = page;
     $scope.limit = 40;
     $http({
       url:RESOURCES.API_URL+'api/wanted',
@@ -358,6 +364,10 @@ angular.module('starter.controllers', [])
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 .controller('MessagesCtrl', function($scope, $auth, $http,$rootScope,RESOURCES) {
 
+  $scope.$on('$ionicView.beforeEnter', function () {
+    $scope.init();
+   });
+
   $scope.messages = [];
   $scope.error;
   $scope.message;
@@ -381,70 +391,34 @@ angular.module('starter.controllers', [])
 
 })
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-.controller('MapCtrl', function($scope, $state, $cordovaGeolocation,RESOURCES) {
-  var options = {
-    timeout: 10000,
-    enableHighAccuracy: true
-  };
-
-  $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
-
-    var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-
-    var mapOptions = {
-      center: latLng,
-      zoom: 15,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-
-    $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
-    //Wait until the map is loaded
-    google.maps.event.addListenerOnce($scope.map, 'idle', function() {
-      var user_icon='img/person.png';
-      var marker = new google.maps.Marker({
-        map: $scope.map,
-        animation: google.maps.Animation.DROP,
-        position: latLng,
-        icon: user_icon
-      });
-
-      var infoWindow = new google.maps.InfoWindow({
-        content: "You Are Here!"
-      });
-
-      google.maps.event.addListener(marker, 'click', function() {
-        infoWindow.open($scope.map, marker);
-      });
-
-    });
-
-  }, function(error) {
-    console.log("Could not get location");
-  });
-
-})
-*/
 
 .controller('MapCtrl', function($scope, $state, $cordovaGeolocation,Markers,GoogleMaps) {
-
-   GoogleMaps.init();
+  $scope.$on('$ionicView.beforeEnter', function () {
+    GoogleMaps.init();
+   });
+   $scope.refreshMap=function(){
+         GoogleMaps.init();
+   };
 
 })
 
 .controller('CasesCtrl', function($scope, $auth, $http,RESOURCES) {
+
+  $scope.$on('$ionicView.beforeEnter', function () {
+    $scope.init();
+
+   });
+
   $scope.cases = [];
   $scope.error;
   $scope.case;
-  console.log($scope.cases);
+
   $scope.listCanSwipe = true;
 
 
   $scope.init = function() {
     $scope.lastpage = 1;
-    //  $scope.page = page;
-    $scope.limit = 40;
+    $scope.limit = 10;
     $http({
       url:RESOURCES.API_URL+'api/caseslibry',
       method: "GET",
@@ -460,7 +434,7 @@ angular.module('starter.controllers', [])
 
   $scope.noMoreItemsAvailable = false;
   $scope.loadMore = function(limit) {
-    console.log("Load More Called");
+    console.log("Load More ");
     if (!limit) {
       limit = 10;
     }
@@ -475,14 +449,10 @@ angular.module('starter.controllers', [])
       }
     }).success(function(cases, status, headers, config) {
 
-
       if (cases.page == cases.pages) {
         $scope.noMoreItemsAvailable = true;
       }
-
       $scope.cases = $scope.cases.concat(cases.docs);
-
-
     });
     $scope.$broadcast('scroll.infiniteScrollComplete');
   };
@@ -491,28 +461,28 @@ angular.module('starter.controllers', [])
 })
 
 .controller('casesCtrlSingle', function($scope, $auth, $http, $stateParams,RESOURCES) {
-  $scope.cases = [];
+  $scope.casess = [];
   $scope.id = $stateParams;
-  console.log($scope.id.caseid)
+  console.log($scope.id);
   $scope.error;
-  $scope.cases;
+
   console.log($stateParams);
 
   $scope.listCanSwipe = true;
 
-
   $scope.init = function() {
     $http({
-      url: RESOURCES.API_URL+'api/caseslibry/' + $scope.id.caseid,
+      url: RESOURCES.API_URL+'api/caseslibry/'+$stateParams.caseid,
       method: "GET",
     }).success(function(cases, status, headers, config) {
-      $scope.cases = cases.doc;
-      $scope.timeline = [];
-      angular.forEach(cases.doc, function(doc, index) {
-        angular.forEach(doc.timeline, function(timeline, index) {
+      $scope.casess = cases.doc;
+      console.log($scope.casess);
+
+      /*angular.forEach(cases.docs, function(doc, index) {
+        angular.forEach(docs.timeline, function(timeline, index) {
           $scope.timeline.push(timeline);
         });
-      });
+      }); */
 
     });
   };

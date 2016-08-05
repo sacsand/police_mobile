@@ -8,10 +8,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
-    // register push notification and get local push token
-
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
 
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -21,18 +17,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
-
-
-          var push = new Ionic.Push({
-            "debug": true
-          });
-
-          push.register(function(token) {
-            console.log("My Device token:", token.token);
-            push.saveToken(token); // persist the token in the Ionic Platform
-          });
-
-      GoogleMaps.init();
+    
     }
 
 
@@ -40,8 +25,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
 })
 
 .constant('RESOURCES', {
-    API_URL: 'http://localhost:3000/',
-//  API_URL: 'https://sheltered-castle-98865.herokuapp.com/'
+//   API_URL: 'http://localhost:3000/',
+  API_URL: 'https://sheltered-castle-98865.herokuapp.com/',
 })
 
 .factory('Markers', function($http, RESOURCES) {
@@ -69,8 +54,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
   function initMap() {
 
     var options = {
-      timeout: 10000,
-      enableHighAccuracy: true
+      timeout: 30000,
+      enableHighAccuracy: false,
+      maximumAge: 75000
     };
 
     $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
@@ -94,13 +80,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
           icon: user_icon
         });
 
-        loadMarkers(latLng);
+          loadMarkers(latLng);
       });
 
     }, function(error) {
-      console.log("Could not get location");
+      console.log(error);
       //Load the markers
-      loadMarkers(latLng);
+      //loadMarkers(latLng);
     });
 
   }
@@ -181,6 +167,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
 
 .config(function($stateProvider, $urlRouterProvider, $authProvider, RESOURCES) {
   $authProvider.loginUrl = RESOURCES.API_URL + 'api/authenticate'; //or whatever your api url is
+
   $stateProvider
     .state('app', {
       url: '/app',
@@ -206,6 +193,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
         }
       }
     })
+
     .state('app.playlists', {
       url: '/playlists',
       views: {
@@ -246,7 +234,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
     }
   })
 
-
   .state('app.wanted', {
     url: '/wanted',
     views: {
@@ -277,9 +264,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
     }
   })
 
-
   .state('app.map', {
     url: '/map',
+    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'templates/map/map.html',
@@ -307,13 +294,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
       }
     }
   })
-
-
-
-
-
-
-
 
   ;
   // if none of the above states are matched, use this as the fallback
