@@ -27,29 +27,33 @@
             <ion-list>
 
 
-
-               <ion-item nav-clear menu-close href="#/app/home">
+              <ion-item nav-clear menu-close ui-sref="app.auth" ng-show="!currentUser">
+                  <i class="icon ion-log-in"></i> Login
+              </ion-item>
+              <ion-item class="item-icon-left" nav-clear menu-close ng-click="logout()" ng-show="currentUser">
+              <i class="icon ion-log-out"></i>
+              <h2>Logout</h2>
+              </ion-item>
+               <ion-item nav-clear menu-close ui-sref="app.home" ng-show="currentUser">
                   <i class="ion-ios-home"></i> Home
                </ion-item>
-                <ion-item nav-clear menu-close href="#/app/notes">
+                <ion-item nav-clear menu-close ui-sref="app.notes" ng-show="currentUser">
                     <i class="ion-ios-compose"></i> Notes
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/wanted">
+                <ion-item nav-clear menu-close ui-sref="app.wanted" ng-show="currentUser">
                     <i class="icon ion-person-stalker"></i> Wanted Persons
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/auth">
-                    <i class="icon ion-log-in"></i> Login
-                </ion-item>
-                <ion-item nav-clear menu-close href="#/app/messages">
+
+                <ion-item nav-clear menu-close ui-sref="app.messages" ng-show="currentUser">
                     <i class="icon ion-ios-chatboxes"></i> Messages
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/map">
+                <ion-item nav-clear menu-close ui-sref="app.map" ng-show="currentUser">
                     <i class="icon ion-android-map"></i> Crime Map
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/cases">
+                <ion-item nav-clear menu-close ui-sref="app.cases" ng-show="currentUser">
                     <i class="ion-ios-briefcase"></i> Cases Database
                 </ion-item>
-                <ion-item nav-clear menu-close href="#/app/report">
+                <ion-item nav-clear menu-close ui-sref="app.report" ng-show="currentUser">
                     <i class="icon ion-loop"></i> Report A Incident
                 </ion-item>
             </ion-list>

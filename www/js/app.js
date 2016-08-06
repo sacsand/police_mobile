@@ -4,11 +4,11 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-material', 'ngCordova','Permission'])
+angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-material', 'ngCordova', 'permission'])
 
-.run(function($ionicPlatform, $rootScope, $timeout) {
+.run(function($ionicPlatform, $rootScope, $timeout,PermissionStore) {
   $ionicPlatform.ready(function() {
-
+    var Permission;
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
@@ -20,7 +20,47 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
       StatusBar.styleDefault();
       Alerting.retrieveItems();
 
+
+
+
     }
+
+    PermissionStore
+       .definePermission('anonymous', function(stateParams) {
+        // If the returned value is *truthy* then the user has the role, otherwise they don't
+        // var User = JSON.parse(localStorage.getItem('user'));
+        // console.log("anonymous ", $auth.isAuthenticated());
+        if (!$auth.isAuthenticated()) {
+          return true; // Is anonymous
+        }
+        return false;
+      })
+
+    .definePermission('isloggedin', function(stateParams) {
+      // If the returned value is *truthy* then the user has the role, otherwise they don't
+      // console.log("isloggedin ", $auth.isAuthenticated());
+      if ($auth.isAuthenticated()) {
+        return true; // Is loggedin
+      }
+      return false;
+    });
+
+    $rootScope.currentUser = JSON.parse(localStorage.getItem('user'));
+
+    $rootScope.logout = function() {
+      console.log('log out called');
+
+      $auth.logout().then(function() {
+
+        // Remove the authenticated user from local storage
+        localStorage.removeItem('user');
+
+        // Remove the current user info from rootscope
+        $rootScope.currentUser = null;
+        $state.go('app.auth');
+      });
+    }
+
 
 
   });
@@ -31,8 +71,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
 
 
 .constant('RESOURCES', {
-API_URL: 'http://localhost:3000/',
-// API_URL: 'https://sheltered-castle-98865.herokuapp.com/',
+  //API_URL: 'http://localhost:3000/',
+   API_URL: 'https://sheltered-castle-98865.herokuapp.com/',
 })
 
 
@@ -40,48 +80,47 @@ API_URL: 'http://localhost:3000/',
 
 
     $scope.add = function() {
-        var alarmTime = new Date();
-        alarmTime.setMinutes(alarmTime.getMinutes() + 1);
-        $cordovaLocalNotification.add({
-            id: "1234",
-            date: alarmTime,
-            message: "This is a message",
-            title: "This is a title",
-            autoCancel: true,
-            sound: null
-        }).then(function () {
-            console.log("The notification has been set");
-        });
+      var alarmTime = new Date();
+      alarmTime.setMinutes(alarmTime.getMinutes() + 1);
+      $cordovaLocalNotification.add({
+        id: "1234",
+        date: alarmTime,
+        message: "This is a message",
+        title: "This is a title",
+        autoCancel: true,
+        sound: null
+      }).then(function() {
+        console.log("The notification has been set");
+      });
     };
 
     $scope.isScheduled = function() {
-        $cordovaLocalNotification.isScheduled("1234").then(function(isScheduled) {
-            alert("Notification 1234 Scheduled: " + isScheduled);
-        });
+      $cordovaLocalNotification.isScheduled("1234").then(function(isScheduled) {
+        alert("Notification 1234 Scheduled: " + isScheduled);
+      });
     }
 
-})
-.factory('Alerting',function($scope,$http, RESOURCES,$timeout){
+  })
+  .factory('Alerting', function($scope, $http, RESOURCES, $timeout) {
 
 
-  $scope.items = [];
+    $scope.items = [];
 
-  var retrieveItems = function () {
-    // get a list of items from the api located at '/api/items'
-    $http.get(RESOURCES.API_URL + 'api/map').success(function (items) {
+    var retrieveItems = function() {
+      // get a list of items from the api located at '/api/items'
+      $http.get(RESOURCES.API_URL + 'api/map').success(function(items) {
         $scope.items = items;
         alert('Marker added');
         // check for item changes
         $timeout(retrieveItems, 5000);
-      }
-    );
-  };
+      });
+    };
 
 
 
-})
+  })
 
-.factory('Markers', function($http, RESOURCES,$timeout) {
+.factory('Markers', function($http, RESOURCES, $timeout) {
 
   var markers = [];
 
@@ -134,7 +173,7 @@ API_URL: 'http://localhost:3000/',
           icon: user_icon
         });
 
-          loadMarkers(latLng);
+        loadMarkers(latLng);
       });
 
     }, function(error) {
@@ -162,8 +201,8 @@ API_URL: 'http://localhost:3000/',
         var distanceInKm = google.maps.geometry.spherical.computeDistanceBetween(latLng, markerPos) / 1000;
 
         if (distanceInKm < 30) {
-          var distance=Number((distanceInKm).toFixed(1));
-        alert('Alert! '+ distance+' km Away ' + record.title ) ;
+          var distance = Number((distanceInKm).toFixed(1));
+          alert('Alert! ' + distance + ' km Away ' + record.title);
         }
         if (record.incident_type == "accident") {
 
@@ -241,48 +280,74 @@ API_URL: 'http://localhost:3000/',
   })
 
   .state('app.browse', {
-      url: '/browse',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/browse.html'
-        }
+    url: '/browse',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/browse.html'
       }
-    })
+    }
+  })
 
-    .state('app.home', {
-      url: '/home',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/home.html',
-          controller: 'homeCtrl'
-        }
+  .state('app.home', {
+    url: '/home',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/home.html',
+        controller: 'homeCtrl'
       }
-    })
-
-
+    }
+  })
 
   .state('app.auth', {
-    url: '/auth',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/login.html',
-        controller: 'AuthCtrl'
+      url: '/auth',
+      data: {
+        permissions: {
+          except: ['isloggedin'],
+          redirectTo: 'app.report'
+        }
+      },
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/login.html',
+          controller: 'AuthCtrl'
+        }
       }
-    }
-  })
-
-  .state('app.notes', {
-    url: '/notes',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/notes.html',
-        controller: 'notesCtrl'
+    })
+    /*
+      .state('app.auth', {
+        url: '/auth',
+        views: {
+          'menuContent': {
+            templateUrl: 'templates/login.html',
+            controller: 'AuthCtrl'
+          }
+        }
+      })
+    */
+    .state('app.notes', {
+      url: '/notes',
+      data: {
+        permissions: {
+          except: ['anonymous'],
+          redirectTo: 'app.auth'
+        }
+      },
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/notes.html',
+          controller: 'notesCtrl'
+        }
       }
-    }
-  })
+    })
 
   .state('app.wanted', {
     url: '/wanted',
+    data: {
+      permissions: {
+        except: ['anonymous'],
+        redirectTo: 'app.auth'
+      }
+    },
     views: {
       'menuContent': {
         templateUrl: 'templates/wanted/wanted.html',
@@ -303,6 +368,12 @@ API_URL: 'http://localhost:3000/',
 
   .state('app.messages', {
     url: '/messages',
+    data: {
+      permissions: {
+        except: ['anonymous'],
+        redirectTo: 'app.auth'
+      }
+    },
     views: {
       'menuContent': {
         templateUrl: 'templates/messages/inbox.html',
@@ -313,6 +384,12 @@ API_URL: 'http://localhost:3000/',
 
   .state('app.map', {
     url: '/map',
+    data: {
+      permissions: {
+        except: ['anonymous'],
+        redirectTo: 'app.auth'
+      }
+    },
     cache: false,
     views: {
       'menuContent': {
@@ -324,6 +401,12 @@ API_URL: 'http://localhost:3000/',
 
   .state('app.cases', {
     url: '/cases',
+    data: {
+      permissions: {
+        except: ['anonymous'],
+        redirectTo: 'app.auth'
+      }
+    },
     views: {
       'menuContent': {
         templateUrl: 'templates/cases/cases.html',
@@ -344,6 +427,12 @@ API_URL: 'http://localhost:3000/',
 
   .state('app.report', {
     url: '/report',
+    data: {
+      permissions: {
+        except: ['anonymous'],
+        redirectTo: 'app.auth'
+      }
+    },
     cache: false,
     views: {
       'menuContent': {
@@ -355,5 +444,5 @@ API_URL: 'http://localhost:3000/',
 
   ;
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/home');
+  $urlRouterProvider.otherwise('/app/auth');
 });
