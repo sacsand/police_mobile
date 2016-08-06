@@ -4,32 +4,84 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-material', 'ngCordova'])
+angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-material', 'ngCordova','Permission'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, $timeout) {
   $ionicPlatform.ready(function() {
 
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
 
+
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
-    
+      Alerting.retrieveItems();
+
     }
 
 
   });
+
+
 })
+
+
 
 .constant('RESOURCES', {
-//   API_URL: 'http://localhost:3000/',
-  API_URL: 'https://sheltered-castle-98865.herokuapp.com/',
+API_URL: 'http://localhost:3000/',
+// API_URL: 'https://sheltered-castle-98865.herokuapp.com/',
 })
 
-.factory('Markers', function($http, RESOURCES) {
+
+.controller("ExampleController", function($scope, $cordovaLocalNotification) {
+
+
+    $scope.add = function() {
+        var alarmTime = new Date();
+        alarmTime.setMinutes(alarmTime.getMinutes() + 1);
+        $cordovaLocalNotification.add({
+            id: "1234",
+            date: alarmTime,
+            message: "This is a message",
+            title: "This is a title",
+            autoCancel: true,
+            sound: null
+        }).then(function () {
+            console.log("The notification has been set");
+        });
+    };
+
+    $scope.isScheduled = function() {
+        $cordovaLocalNotification.isScheduled("1234").then(function(isScheduled) {
+            alert("Notification 1234 Scheduled: " + isScheduled);
+        });
+    }
+
+})
+.factory('Alerting',function($scope,$http, RESOURCES,$timeout){
+
+
+  $scope.items = [];
+
+  var retrieveItems = function () {
+    // get a list of items from the api located at '/api/items'
+    $http.get(RESOURCES.API_URL + 'api/map').success(function (items) {
+        $scope.items = items;
+        alert('Marker added');
+        // check for item changes
+        $timeout(retrieveItems, 5000);
+      }
+    );
+  };
+
+
+
+})
+
+.factory('Markers', function($http, RESOURCES,$timeout) {
 
   var markers = [];
 
@@ -38,6 +90,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
 
       return $http.get(RESOURCES.API_URL + 'api/map').then(function(response) {
         markers = response;
+
         return markers;
       });
 
@@ -51,12 +104,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
   var apiKey = false;
   var map = null;
 
+
   function initMap() {
 
     var options = {
-      timeout: 30000,
-      enableHighAccuracy: false,
-      maximumAge: 75000
+      timeout: 3000,
+      enableHighAccuracy: true,
+
     };
 
     $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
@@ -107,8 +161,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
 
         var distanceInKm = google.maps.geometry.spherical.computeDistanceBetween(latLng, markerPos) / 1000;
 
-        if (distanceInKm < 2) {
-          console.log("distance" + distanceInKm)
+        if (distanceInKm < 30) {
+          var distance=Number((distanceInKm).toFixed(1));
+        alert('Alert! '+ distance+' km Away ' + record.title ) ;
         }
         if (record.incident_type == "accident") {
 
@@ -194,25 +249,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
       }
     })
 
-    .state('app.playlists', {
-      url: '/playlists',
+    .state('app.home', {
+      url: '/home',
       views: {
         'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
+          templateUrl: 'templates/home.html',
+          controller: 'homeCtrl'
         }
       }
     })
 
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
-      }
-    }
-  })
+
 
   .state('app.auth', {
     url: '/auth',
@@ -224,12 +271,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
     }
   })
 
-  .state('app.jokes', {
-    url: '/jokes',
+  .state('app.notes', {
+    url: '/notes',
     views: {
       'menuContent': {
-        templateUrl: 'templates/jokes.html',
-        controller: 'JokesCtrl'
+        templateUrl: 'templates/notes.html',
+        controller: 'notesCtrl'
       }
     }
   })
@@ -295,7 +342,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
     }
   })
 
+  .state('app.report', {
+    url: '/report',
+    cache: false,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/report/report.html',
+        controller: 'reportCtrl'
+      }
+    }
+  })
+
   ;
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+  $urlRouterProvider.otherwise('/app/home');
 });

@@ -1,0 +1,36 @@
+<ion-view view-title="Notes">
+  <ion-content>
+    <div class="list list-inset">
+      <label class="item item-input">
+        <input type="text" placeholder="Add New Note" ng-model="note">
+      </label>
+      <button class="button button-block button-positive" ng-click="addnote(note)">
+        Add Note
+      </button>
+    </div>
+
+
+    <ion-list can-swipe="listCanSwipe">
+      <ion-item ng-repeat="note in notes track by note._id" class="item item-text-wrap">
+
+        <h2>Note: {{note.name}}</h2>
+        <h4>Created at : {{note.published_at}}</h4>
+
+        <ion-option-button class="button-positive" ng-click="updatePopup(note, 'Update')">
+          <!-- Edit -->
+          <i class="icon ion-edit"></i>
+        </ion-option-button>
+
+        <ion-option-button class="button-assertive" ng-click="deletenote($index, note._id)">
+          <!-- Delete -->
+          <i class="icon ion-trash-a"></i>
+        </ion-option-button>
+
+      </ion-item>
+    </ion-list>
+  <!--  <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh(currentpage+1,totalPages)">  </ion-refresher> -->
+    <ion-infinite-scroll  ng-if="!noMoreItemsAvailable"
+  on-infinite="loadMore(5)" distance="20%"></ion-infinite-scroll>
+
+   </ion-content>
+</ion-view>

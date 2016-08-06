@@ -1,0 +1,28 @@
+<ion-view view-title="Report A Incident">
+  <ion-content padding="true">
+    <form ng-submit="submit()">
+
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Title</span>
+        <input type="text" name="title" placeholder="enter title" ng-model="data.title">
+      </label>
+
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Type</span>
+        <input type="text" name="incident_type" placeholder="enter type" ng-model="data.type">
+      </label>
+
+      <input class="button button-block button-positive" type="submit" name="submit" value="report">
+    </form>
+
+    <div class="card">
+      <div class="item item-text-wrap">
+        Reported: <b ng-bind="response.title"></b>
+        <br />
+        latitude: <b ng-bind="response.lat"></b>
+        <br />
+        longitude: <b ng-bind="response.lng"></b>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

@@ -1,14 +1,6 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
-
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-
   // Form data for the login modal
   $scope.loginData = {};
 
@@ -41,34 +33,15 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('PlaylistsCtrl', function($scope,$rootScope) {
+.controller('homeCtrl', function($scope, $rootScope) {
 
 
-  $scope.playlists = [{
-    title: 'Reggae',
-    id: 1
-  }, {
-    title: 'Chill',
-    id: 2
-  }, {
-    title: 'Dubstep',
-    id: 3
-  }, {
-    title: 'Indie',
-    id: 4
-  }, {
-    title: 'Rap',
-    id: 5
-  }, {
-    title: 'Cowbell',
-    id: 6
-  }];
 })
 
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {})
 
-.controller('AuthCtrl', function($scope, $location, $stateParams, $ionicHistory, $http, $state, $auth, $rootScope,RESOURCES) {
+
+.controller('AuthCtrl', function($scope, $location, $stateParams, $ionicHistory, $http, $state, $auth, $rootScope, RESOURCES) {
 
   $scope.loginData = {}
   $scope.loginError = false;
@@ -85,7 +58,7 @@ angular.module('starter.controllers', [])
 
     $auth.login(credentials).then(function() {
       // Return an $http request for the authenticated user
-      $http.get(RESOURCES.API_URL+'api/user/' + $scope.loginData.email).success(function(response) {
+      $http.get(RESOURCES.API_URL + 'api/user/' + $scope.loginData.email).success(function(response) {
           // Stringify the retured data
           var user = JSON.stringify(response.user);
           console.log(user);
@@ -94,7 +67,7 @@ angular.module('starter.controllers', [])
           localStorage.setItem('user', user);
 
           // Getting current user data from local storage
-          $rootScope.currentUser =response.user;
+          $rootScope.currentUser = response.user;
           //console.log($rootScope.currentUser);
           // $rootScope.currentUser = localStorage.setItem('user');
 
@@ -102,7 +75,7 @@ angular.module('starter.controllers', [])
             disableBack: true
           });
 
-          $state.go('app.jokes');
+          $state.go('app.home');
         })
         .error(function() {
           $scope.loginError = true;
@@ -114,25 +87,27 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('JokesCtrl', function($scope, $auth, $http, $ionicPopup,RESOURCES) {
-  $scope.jokes = [];
+.controller('notesCtrl', function($scope, $auth, $http, $ionicPopup,RESOURCES) {
+  $scope.notes = [];
   $scope.error;
-  $scope.joke;
+  $scope.note;
 
   $scope.listCanSwipe = true;
+  var obj = localStorage.getItem("user");
+  $scope.user = JSON.parse(obj);
 
-  // Update Popup
-  $scope.updatePopup = function(joke, label) {
-    console.log(joke, label);
-    $scope.data = joke;
+
+  $scope.updatePopup = function(note, label) {
+    console.log(note, label);
+    $scope.data = note;
 
     var myPopup = $ionicPopup.show({
       template: '<input type="text" ng-model="data.name">',
-      title: 'Update Joke',
-      // subTitle: 'Please use normal things',
+      title: 'Update note',
+
       scope: $scope,
       buttons: [
-        // { text: 'Cancel' },
+
         {
           text: '<b>' + label + '</b>',
           type: 'button-positive',
@@ -147,7 +122,7 @@ angular.module('starter.controllers', [])
       ]
     });
     myPopup.then(function(res) {
-      $scope.updateJoke(res);
+      $scope.updatenote(res);
       console.log(res);
     });
   };
@@ -157,17 +132,17 @@ angular.module('starter.controllers', [])
     $scope.page = 1;
     $scope.limit = 5;
     $http({
-      url: RESOURCES.API_URL+'api/cases',
+      url: RESOURCES.API_URL + 'api/notes',
       method: "GET",
       params: {
         page: $scope.lastpage,
         limit: $scope.limit
       }
-    }).success(function(jokes, status, headers, config) {
-      $scope.jokes = jokes.docs;
-      $scope.currentpage = jokes.page;
-      $scope.totalRecord = jokes.total;
-      $scope.totalPages = jokes.pages;
+    }).success(function(notes, status, headers, config) {
+      $scope.notes = notes.docs;
+      $scope.currentpage = notes.page;
+      $scope.totalRecord = notes.total;
+      $scope.totalPages = notes.pages;
     });
   };
   $scope.noMoreItemsAvailable = false;
@@ -179,20 +154,20 @@ angular.module('starter.controllers', [])
 
     $scope.lastpage += 1;
     $http({
-      url: RESOURCES.API_URL+'api/cases',
+      url: RESOURCES.API_URL + 'api/notes',
       method: "GET",
       params: {
         limit: limit,
         page: $scope.lastpage
       }
-    }).success(function(jokes, status, headers, config) {
-      console.log(jokes);
+    }).success(function(notes, status, headers, config) {
+      console.log(notes);
 
-      if (jokes.page == jokes.pages) {
+      if (notes.page == notes.pages) {
         $scope.noMoreItemsAvailable = true;
       }
 
-      $scope.jokes = $scope.jokes.concat(jokes.docs);
+      $scope.notes = $scope.notes.concat(notes.docs);
 
 
     });
@@ -200,43 +175,44 @@ angular.module('starter.controllers', [])
   };
 
 
-  $scope.addJoke = function(joke) {
+  $scope.addnote = function(note) {
 
-    console.log("add joke: ", joke);
+    console.log("add note: ", note);
 
-    $http.post(RESOURCES.API_URL+'api/cases', {
+    $http.post(RESOURCES.API_URL + 'api/notes', {
       //  console.log($rootScope.currentUser.name);
-      name: joke
-        //_id: $rootScope.currentUser.name
+      userid:$scope.user._id,
+      name: note
+
     }).success(function(response) {
-      $scope.jokes.unshift(response);
-      console.log($scope.jokes);
-      $scope.joke = '';
-      console.log("Joke Created Successfully");
+      $scope.notes.unshift(response);
+      console.log($scope.notes);
+      $scope.note = '';
+      console.log("note Created Successfully");
     }).error(function() {
       console.log("error");
     });
   };
 
 
-  $scope.updateJoke = function(joke) {
-    console.log(joke);
-    $http.put(RESOURCES.API_URL+'api/cases/' + joke._id, {
-      name: joke.name
+  $scope.updatenote = function(note) {
+    console.log(note);
+    $http.put(RESOURCES.API_URL + 'api/n/' + note._id, {
+      name: note.name
         //user_id: $rootScope.currentUser.id
     }).success(function(response) {
-      console.log("Joke Updated Successfully");
+      console.log("note Updated Successfully");
     }).error(function() {
       console.log("error");
     });
   };
 
-  $scope.deleteJoke = function(index, jokeId) {
-    console.log(index, jokeId);
+  $scope.deletenote = function(index, noteId) {
+    console.log(index, noteId);
 
-    $http.delete(RESOURCES.API_URL+'api/cases/' + jokeId)
+    $http.delete(RESOURCES.API_URL + 'api/cases/' + noteId)
       .success(function() {
-        $scope.jokes.splice(index, 1);
+        $scope.notes.splice(index, 1);
       });
   };
 
@@ -324,7 +300,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('WantedCtrlSingle', function($scope, $auth, $http, $stateParams,RESOURCES) {
+.controller('WantedCtrlSingle', function($scope, $auth, $http, $stateParams, RESOURCES) {
   $scope.wanteds = [];
   $scope.id = $stateParams;
 
@@ -338,7 +314,7 @@ angular.module('starter.controllers', [])
 
   $scope.init = function() {
     $http({
-      url: RESOURCES.API_URL+'api/wanted/' + $scope.id.wantedId,
+      url: RESOURCES.API_URL + 'api/wanted/' + $scope.id.wantedId,
       method: "GET",
     }).success(function(wanteds, status, headers, config) {
       $scope.wanteds = wanteds;
@@ -362,11 +338,11 @@ angular.module('starter.controllers', [])
 })
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-.controller('MessagesCtrl', function($scope, $auth, $http,$rootScope,RESOURCES) {
+.controller('MessagesCtrl', function($scope, $auth, $http, $rootScope, RESOURCES) {
 
-  $scope.$on('$ionicView.beforeEnter', function () {
+  $scope.$on('$ionicView.beforeEnter', function() {
     $scope.init();
-   });
+  });
 
   $scope.messages = [];
   $scope.error;
@@ -375,11 +351,11 @@ angular.module('starter.controllers', [])
 
 
   $scope.init = function() {
-  var obj=localStorage.getItem("user");
-  $scope.user=JSON.parse(obj);
+    var obj = localStorage.getItem("user");
+    $scope.user = JSON.parse(obj);
     console.log($scope.user._id);
     $http({
-      url: RESOURCES.API_URL+'api/messages/received/'+$scope.user._id,
+      url: RESOURCES.API_URL + 'api/messages/received/' + $scope.user._id,
       method: "GET",
     }).success(function(messages, status, headers, config) {
 
@@ -392,22 +368,23 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('MapCtrl', function($scope, $state, $cordovaGeolocation,Markers,GoogleMaps) {
-  $scope.$on('$ionicView.beforeEnter', function () {
+.controller('MapCtrl', function($scope, $state, $cordovaGeolocation, Markers, GoogleMaps) {
+  $scope.$on('$ionicView.beforeEnter', function() {
     GoogleMaps.init();
-   });
-   $scope.refreshMap=function(){
-         GoogleMaps.init();
-   };
+  });
+  $scope.refreshMap = function() {
+    $state.reload();;
+
+  };
 
 })
 
-.controller('CasesCtrl', function($scope, $auth, $http,RESOURCES) {
+.controller('CasesCtrl', function($scope, $auth, $http, RESOURCES) {
 
-  $scope.$on('$ionicView.beforeEnter', function () {
+  $scope.$on('$ionicView.beforeEnter', function() {
     $scope.init();
 
-   });
+  });
 
   $scope.cases = [];
   $scope.error;
@@ -420,7 +397,7 @@ angular.module('starter.controllers', [])
     $scope.lastpage = 1;
     $scope.limit = 10;
     $http({
-      url:RESOURCES.API_URL+'api/caseslibry',
+      url: RESOURCES.API_URL + 'api/caseslibry',
       method: "GET",
       params: {
         page: $scope.lastpage,
@@ -441,7 +418,7 @@ angular.module('starter.controllers', [])
 
     $scope.lastpage += 1;
     $http({
-      url: RESOURCES.API_URL+'api/caseslibry',
+      url: RESOURCES.API_URL + 'api/caseslibry',
       method: "GET",
       params: {
         limit: limit,
@@ -460,7 +437,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('casesCtrlSingle', function($scope, $auth, $http, $stateParams,RESOURCES) {
+.controller('casesCtrlSingle', function($scope, $auth, $http, $stateParams, RESOURCES) {
   $scope.casess = [];
   $scope.id = $stateParams;
   console.log($scope.id);
@@ -472,7 +449,7 @@ angular.module('starter.controllers', [])
 
   $scope.init = function() {
     $http({
-      url: RESOURCES.API_URL+'api/caseslibry/'+$stateParams.caseid,
+      url: RESOURCES.API_URL + 'api/caseslibry/' + $stateParams.caseid,
       method: "GET",
     }).success(function(cases, status, headers, config) {
       $scope.casess = cases.doc;
@@ -488,5 +465,61 @@ angular.module('starter.controllers', [])
   };
 
   $scope.init();
+
+})
+
+.controller('reportCtrl', function($scope, $auth, $http, $cordovaGeolocation, RESOURCES) {
+  $scope.data = {};
+  $scope.latLng = 0;
+  $scope.error = null;
+  $scope.lat;
+  $scope.lng;
+  var options = {
+    timeout: 10000,
+    enableHighAccuracy: true
+  };
+  $cordovaGeolocation.getCurrentPosition(options).then(function(position) {
+
+    $scope.lat = position.coords.latitude;
+    $scope.lng = position.coords.longitude;
+
+
+  }, function(error) {
+    console.log("cant get location");
+    $scope.error = "Cant Get The Location";
+    $scope.lat = 6.899946;
+    $scope.lng = 79.98427;
+
+  });
+
+  $scope.submit = function() {
+
+
+    $http.post(RESOURCES.API_URL + 'api/map/add', {
+      title: $scope.data.title,
+      type: $scope.data.type,
+      lat: $scope.lat,
+      lng: $scope.lng
+    }).then(function(res) {
+      $scope.response = res.data;
+      console.log(res.data);
+    });
+
+
+
+  }
+
+
+})
+
+.controller('notifiCtrl', function($scope, $auth, $http,$pusher, RESOURCES) {
+
+  var pusher = new Pusher('985ac896cda360ab3d06', {
+        encrypted: true
+      });
+      var channel = pusher.subscribe('my_chanel');
+        channel.bind('marker_added', function(data) {
+          alert(data.post);
+        });
 
 })
