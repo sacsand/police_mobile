@@ -1,15 +1,19 @@
 <ion-view view-title="Wantedlists">
 
-  <ion-content>
+  <ion-content padding="true">
+    <div class="row">
+      <div class="col">
+            <h3 class="border-bottom"></i> Wanted Persons List</h3>
+      </div>
 
-        <h4 class="border-top"><i class="icon ion-android-happy"></i> Wanted Persons List</h4>
-        <div class="list">
-            <a class="item item-avatar" ng-repeat="wanted in wanteds" href="#/app/wanted/{{wanted._id}}" >
-                <img ng-src="data:image/png;base64,{{wanted.data}}">
-                <h2>{{wanted.warent}}</h2>
-                <p>{{wanted._id}}</p>
-            </a>
+    </div>
+    <div class="list">
+      <a class="item item-avatar" ng-repeat="wanted in wanteds" href="#/app/wanted/{{wanted._id}}">
+        <img ng-src="data:image/png;base64,{{wanted.data}}">
+        <h2>{{wanted.warent}}</h2>
+        <p>{{wanted._id}}</p>
+      </a>
 
-        </div>
+    </div>
   </ion-content>
 </ion-view>

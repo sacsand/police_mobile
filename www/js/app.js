@@ -18,7 +18,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
-      Alerting.retrieveItems();
 
 
 
@@ -27,9 +26,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
 
     PermissionStore
        .definePermission('anonymous', function(stateParams) {
-        // If the returned value is *truthy* then the user has the role, otherwise they don't
-        // var User = JSON.parse(localStorage.getItem('user'));
-        // console.log("anonymous ", $auth.isAuthenticated());
         if (!$auth.isAuthenticated()) {
           return true; // Is anonymous
         }
@@ -37,8 +33,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
       })
 
     .definePermission('isloggedin', function(stateParams) {
-      // If the returned value is *truthy* then the user has the role, otherwise they don't
-      // console.log("isloggedin ", $auth.isAuthenticated());
       if ($auth.isAuthenticated()) {
         return true; // Is loggedin
       }
@@ -76,31 +70,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
 })
 
 
-.controller("ExampleController", function($scope, $cordovaLocalNotification) {
 
-
-    $scope.add = function() {
-      var alarmTime = new Date();
-      alarmTime.setMinutes(alarmTime.getMinutes() + 1);
-      $cordovaLocalNotification.add({
-        id: "1234",
-        date: alarmTime,
-        message: "This is a message",
-        title: "This is a title",
-        autoCancel: true,
-        sound: null
-      }).then(function() {
-        console.log("The notification has been set");
-      });
-    };
-
-    $scope.isScheduled = function() {
-      $cordovaLocalNotification.isScheduled("1234").then(function(isScheduled) {
-        alert("Notification 1234 Scheduled: " + isScheduled);
-      });
-    }
-
-  })
   .factory('Alerting', function($scope, $http, RESOURCES, $timeout) {
 
 
