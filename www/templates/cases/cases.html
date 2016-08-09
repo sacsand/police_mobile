@@ -5,7 +5,7 @@
         <h3> Cases Library</h3>
         <div class="list">
             <a class="item item-avatar" ng-repeat="case in cases" href="#/app/cases/{{case._id}}" >
-                <img ng-src="data:image/png;base64,{{case.image}}">
+                <img ng-src="{{case.image}}">
                 <h2>{{case.title}}</h2>
                 <p>/{{case.case_id}}</p>
             </a>

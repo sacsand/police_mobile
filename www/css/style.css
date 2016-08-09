@@ -1,10 +1,22 @@
 /* Empty. Add your own CSS if you like */
 /* Empty. Add your own CSS if you like */
 /* Utilities */
-
-.loginc {
-background: url('../img/newmaterial.jpg') no-repeat center;
+.home{
+  background: url('../img/03.png') no-repeat center;
 }
+.login {
+background: url('../img/03.png') no-repeat center;
+}
+#llist .item{
+  border-color: rgba(0, 0, 0, 0);
+  	background-color: rgba(0, 0, 0, 0 );
+  	color: white;
+}
+
+#cardx .item {
+  border-color: rgba(0, 0, 0, 0);
+  	background-color: rgba(110, 139, 255, 0.2 );
+  	color: white; }
 #loginx{
     padding-top: 38%;
 

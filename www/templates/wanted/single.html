@@ -14,7 +14,7 @@
         </div>
 
         <div class="item item-body" ng-repeat="wanted in wanteds.doc" >
-          <img  class="full-image" ng-src="data:image/png;base64,{{wanted.data}}">
+          <img  class="full-image" ng-src="{{wanted.data}}">
           {{wanted.description}}
 
         </div>
@@ -52,7 +52,7 @@
             <i class="icon ion-person-stalker"></i> Race
             <span class="badge badge-assertive" ng-repeat="detail in details">{{detail.race}}</span>
           </a>
-          
+
         </div>
 
 

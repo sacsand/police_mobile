@@ -7,9 +7,13 @@
       </div>
 
     </div>
+
+    <label class="item item-input">
+      <input type="text" placeholder="Search" ng-model="test">
+    </label>
     <div class="list">
-      <a class="item item-avatar" ng-repeat="wanted in wanteds" href="#/app/wanted/{{wanted._id}}">
-        <img ng-src="data:image/png;base64,{{wanted.data}}">
+      <a class="item item-avatar" ng-repeat="wanted in wanteds | filter:test" href="#/app/wanted/{{wanted._id}}">
+        <img ng-src="{{wanted.data}}">
         <h2>{{wanted.warent}}</h2>
         <p>{{wanted._id}}</p>
       </a>
