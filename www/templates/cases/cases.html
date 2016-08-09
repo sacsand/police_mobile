@@ -3,11 +3,14 @@
   <ion-content padding="true">
 
         <h3> Cases Library</h3>
+        <label class="item item-input">
+          <input type="text" placeholder="Search" ng-model="test">
+        </label>
         <div class="list">
-            <a class="item item-avatar" ng-repeat="case in cases" href="#/app/cases/{{case._id}}" >
+            <a class="item item-avatar" ng-repeat="case in cases | filter:test" href="#/app/cases/{{case._id}}" >
                 <img ng-src="{{case.image}}">
                 <h2>{{case.title}}</h2>
-                <p>/{{case.case_id}}</p>
+                <p>/{{case.type}}</p>
             </a>
 
         </div>

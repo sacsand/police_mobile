@@ -12,18 +12,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
-
-
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
-
-
-
-
     }
-
     PermissionStore
        .definePermission('anonymous', function(stateParams) {
         if (!$auth.isAuthenticated()) {
@@ -62,33 +55,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
 
 })
 
-
-
 .constant('RESOURCES', {
-  //API_URL: 'http://localhost:3000/',
+   //API_URL: 'http://localhost:3000/',
    API_URL: 'https://sheltered-castle-98865.herokuapp.com/',
 })
 
-
-
-  .factory('Alerting', function($scope, $http, RESOURCES, $timeout) {
-
-
-    $scope.items = [];
-
-    var retrieveItems = function() {
-      // get a list of items from the api located at '/api/items'
-      $http.get(RESOURCES.API_URL + 'api/map').success(function(items) {
-        $scope.items = items;
-        alert('Marker added');
-        // check for item changes
-        $timeout(retrieveItems, 5000);
-      });
-    };
-
-
-
-  })
 
 .factory('Markers', function($http, RESOURCES, $timeout) {
 
@@ -283,17 +254,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
         }
       }
     })
-    /*
-      .state('app.auth', {
-        url: '/auth',
-        views: {
-          'menuContent': {
-            templateUrl: 'templates/login.html',
-            controller: 'AuthCtrl'
-          }
-        }
-      })
-    */
+
     .state('app.notes', {
       url: '/notes',
       data: {
@@ -338,6 +299,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
 
   .state('app.messages', {
     url: '/messages',
+    cache: false,
     data: {
       permissions: {
         except: ['anonymous'],
@@ -371,6 +333,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'satellizer', 'ionic-
 
   .state('app.cases', {
     url: '/cases',
+    cache: false,
     data: {
       permissions: {
         except: ['anonymous'],

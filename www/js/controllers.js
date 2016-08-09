@@ -68,8 +68,6 @@ angular.module('starter.controllers', [])
 
           // Getting current user data from local storage
           $rootScope.currentUser = response.user;
-          //console.log($rootScope.currentUser);
-          // $rootScope.currentUser = localStorage.setItem('user');
 
           $ionicHistory.nextViewOptions({
             disableBack: true
@@ -87,7 +85,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('notesCtrl', function($scope, $auth, $http, $ionicPopup,RESOURCES) {
+.controller('notesCtrl', function($scope, $auth, $http, $ionicPopup, RESOURCES) {
   $scope.notes = [];
   $scope.error;
   $scope.note;
@@ -181,7 +179,7 @@ angular.module('starter.controllers', [])
 
     $http.post(RESOURCES.API_URL + 'api/notes', {
       //  console.log($rootScope.currentUser.name);
-      userid:$scope.user._id,
+      userid: $scope.user._id,
       name: note
 
     }).success(function(response) {
@@ -232,12 +230,10 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('WantedCtrl', function($scope, $auth, $http,RESOURCES) {
-  $scope.$on('$ionicView.beforeEnter', function () {
-    $scope.init();       // update campaigns everytime the view becomes active
-         // (on first time added to DOM and after the view becomes active after cached
-       //alert('test');
-   });
+.controller('WantedCtrl', function($scope, $auth, $http, RESOURCES) {
+  $scope.$on('$ionicView.beforeEnter', function() {
+    $scope.init();
+  });
   $scope.wanteds = [];
   $scope.error;
   $scope.wanted;
@@ -249,7 +245,7 @@ angular.module('starter.controllers', [])
     $scope.lastpage = 1;
     $scope.limit = 40;
     $http({
-      url:RESOURCES.API_URL+'api/wanted',
+      url: RESOURCES.API_URL + 'api/wanted',
       method: "GET",
       params: {
         page: $scope.lastpage,
@@ -274,7 +270,7 @@ angular.module('starter.controllers', [])
 
     $scope.lastpage += 1;
     $http({
-      url: RESOURCES.API_URL+'api/wanted',
+      url: RESOURCES.API_URL + 'api/wanted',
       method: "GET",
       params: {
         limit: limit,
@@ -455,12 +451,6 @@ angular.module('starter.controllers', [])
       $scope.casess = cases.doc;
       console.log($scope.casess);
 
-      /*angular.forEach(cases.docs, function(doc, index) {
-        angular.forEach(docs.timeline, function(timeline, index) {
-          $scope.timeline.push(timeline);
-        });
-      }); */
-
     });
   };
 
@@ -512,14 +502,14 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('notifiCtrl', function($scope, $auth, $http,$pusher, RESOURCES) {
+.controller('notifiCtrl', function($scope, $auth, $http, $pusher, RESOURCES) {
 
   var pusher = new Pusher('985ac896cda360ab3d06', {
-        encrypted: true
-      });
-      var channel = pusher.subscribe('my_chanel');
-        channel.bind('marker_added', function(data) {
-          alert(data.post);
-        });
+    encrypted: true
+  });
+  var channel = pusher.subscribe('my_chanel');
+  channel.bind('marker_added', function(data) {
+    alert(data.post);
+  });
 
 })
